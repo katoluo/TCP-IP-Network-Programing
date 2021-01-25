@@ -15,7 +15,7 @@ IP地址分为两类：
 
 IPv4标准的4字节IP地址分为网络地址和主机地址，且分为A、B、C、D、E等类型。
 
-![图3-1.png]()
+![图3-1.png](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_03/images/%E5%9B%BE3-1.png)
 
 网络地址（网络ID）是为区分网络而设置的一部分IP地址。
 
@@ -143,11 +143,11 @@ struct sockaddr
 
 通过示例进行说明：
 
-![图3-4.png]()
+![图3-4.png](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_03/images/%E5%9B%BE3-4.png)
 
 <center>图3-4   大端序字节表示</center>
 
-![图3-5.png]()
+![图3-5.png](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_03/images/%E5%9B%BE3-5.png)
 
 <center>图3-5   小端序字节表示</center>
 
