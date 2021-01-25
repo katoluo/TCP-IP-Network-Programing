@@ -10,8 +10,8 @@ void error_handing(char *message);
 
 int main(int argc, char *argv[])
 {
-  int serv_sock;
-  int clnt_sock;
+  int serv_sock; // 用来保存服务器端套接字
+  int clnt_sock; // 用来保存客户端套接字
 
   struct sockaddr_in serv_addr;
   struct sockaddr_in clnt_addr;
