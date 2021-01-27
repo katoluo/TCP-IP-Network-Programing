@@ -6,7 +6,7 @@ TCP是Transmission Control Protocol（传输控制协议）的简写，意为“
 
 如图4-1所示：
 
-![图4-1]()
+![图4-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_04/images/%E5%9B%BE4-1.png)
 
 TCP/IP协议栈分为4层，各层可能通过操作系统等软件实现，也可能通过类似NIC的硬件设备实现。
 
@@ -22,7 +22,7 @@ TCP/IP协议栈分为4层，各层可能通过操作系统等软件实现，也�
 
 链路层是物理链接领域标准化的结果，也是最基本的领域，专门定义LAN、WAN、MAN等网络标准。
 
-![图4-4]()
+![图4-4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_04/images/%E5%9B%BE4-4.png)
 
 
 
@@ -52,7 +52,7 @@ IP层只关注1个数据包（数据传输的基本单位）的传输过程。�
 
 如果数据交换过程中可以确认对方已收到数据，并重传丢失的数据，那么即便IP层不保证数据传输，这类通信也是可靠的，如图4-5所示：
 
-![图4-5]()
+![图4-5](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_04/images/%E5%9B%BE4-5.png)
 
 
 
@@ -72,7 +72,7 @@ IP层只关注1个数据包（数据传输的基本单位）的传输过程。�
 
 如图4-6所示：
 
-![图4-6]()
+![图4-6](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_04/images/%E5%9B%BE4-6.png)
 
 调用socket函数创建套接字，声明并初始化地址信息结构体变量，调用bind函数向套接字分配地址。
 
@@ -152,7 +152,7 @@ int connect(int sock, struct sockaddr *servaddr, socklen_t addrlen);
 
 如图4-10所示：
 
-![图4-10]()
+![图4-10](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_04/images/%E5%9B%BE4-10.png)
 
 
 
