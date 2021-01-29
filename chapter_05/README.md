@@ -4,7 +4,7 @@
 
 #### 回声客户端的完美实现
 
-[echo_client2.c]()
+[echo_client2.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_05/echo_client2.c)
 
 
 
@@ -36,7 +36,7 @@
 
 这种程度的协议相当于实现了一半程序，这也说明应用层协议设计在网络编程中的重要性。只要设计好协议，实现就不会称为大问题。另外，之前也讲过，调用close函数将向对方传递EOF，请各位记住这一点并加以运用。
 
-客户端源代码：[op_client.c]()
+客户端源代码：[op_client.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_05/op_client.c)
 
 > 第8～10行：将待算数字的字节数和运算结果的字节数设为常数。
 >
@@ -56,11 +56,11 @@
 
 客户端实现的讲解到此结束，最后给出客户端向服务器端传输的数据结果示例，如图5-1所示。
 
-![图5-1]()
+![图5-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_05/images/%E5%9B%BE5-1.png)
 
 从上图可以看出，若想在同一数组中保存并传输多种数据类型，应把数组声明为char类型。而且需要额外做一些指针及数组运算。接下来给出服务器端代码。
 
-服务器端源代码：[op_server.c]() 
+服务器端源代码：[op_server.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_05/op_server.c) 
 
 > 第44行：为了接收5个客户端的连接请求而编写的for语句。
 >
@@ -84,7 +84,7 @@ TCP套接字的数据收发无边界。服务器端即使调用1此write函数�
 
 实际上，write函数调用后并非立即传输数据，read函数调用后也并非马上接收数据。更准确地说，如图5-2所示，write函数调用瞬间，数据将移至输出缓冲；read函数调用瞬间，从输入缓冲读取数据。
 
-![图5-2]()
+![图5-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_05/images/%E5%9B%BE5-2.png)
 
 调用write函数是，数据将移到输出缓冲，在适当的时候（不管是分别传送还是一次性传送）传向对方的输入缓冲。这时对方将调用read函数从输入缓冲读取数据，这些I/O缓冲特性可调整如下。
 
@@ -142,7 +142,7 @@ TCP套节从创建消失所经过过程分为如下3步。
 
 TCP在实际通行过程中也会经过3此对话过程，因此，该过称又称三次握手。接下来给出连接过程中实际交换的信息格式，如图5-3所示。
 
-![图5-3]()
+![图5-3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_05/images/%E5%9B%BE5-3.png)
 
 套接字是以全双工（Full-duplex）方式工作的。也就是说，它可以双向传递数据。因此，收发数据前需要做一些准备。首先，请求连接的主机A向主机B传递如下信息：
 
@@ -178,3 +178,42 @@ TCP在实际通行过程中也会经过3此对话过程，因此，该过称又�
 
 
 
+**TCP内部工作原理2：与对方主机的数据交换**
+
+通过第一步三次握手过程完成了数据交换准备，下面就正式开始收发数据，其默认方式如图5-4所示。
+
+![图5-4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_05/images/%E5%9B%BE5-4.png)
+
+上图给出了主机A分2次（分2个数据包）向主机B传递200字节的过程。首先，主机A通过1个数据包发送100个字节的数据，数据包的SEQ为1200.主机B为了确认这一点，向主机A发送ACK1301消息。
+
+此时的ACK号为1301而非1201,原因在于ACK号的增量为传输的数据字节数。假设每次ACK号不加传输的字节数，这样虽然可以确认数据包的传输，但无法明确100字节全部正确传递还是丢失了一部分，比如只传递了80字节。因此按如下公式传递ACK消息：
+
+> ACK号——>SEQ号 + 传递的字节数 + 1
+
+与三次握手协议相同，最后加1为了告诉对方下次要传递的SEQ号。下面分析传递过程中数据包消失的情况。如图5-5所示。
+
+![图5-5](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_05/images/%E5%9B%BE5-5.png)
+
+表示通过SEQ 1301数据包向主机B传递100字节数据。但中间发生了错误，主机B未收到。经过一段时间后，主机A仍未收到对于SEQ 1301的ACK确认，因此试着重传该数据包。为了完成数据包重传，TCP套接字启动计时器以等待ACK应答。若相应计时器发生超时（Time-out）则重传。
+
+
+
+**TCP的内部工作原理3：断开与套接字的连接**
+
+TCP套接字的结束过程也非常优雅。如果对方还有数据需要传输时直接断掉连接会出问题，所以断开连接时需要双方协商。断开连接时双方对话如下。
+
+:one: 套接字A：“我希望断开连接。”
+
+:two: 套接字B：“哦，是吗？请稍等。”
+
+:three: 套接字B：“我也准备就绪，可以断开连接。”
+
+:four: 套接字A：“好的，谢谢合作。”
+
+先由套接字A向套接字B传递断开连接的消息，套接字B发出确认收到的消息，然后向套接字A传递可以断开连接的消息，套接字A同样发出确认消息，如图5-6所示。
+
+![图5-6](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_05/images/%E5%9B%BE5-6.png)
+
+数据包内的FIN表示断开连接。也就是说，双方各发送1此FIN消息后断开连接。此过程经历4个阶段，因此又称四次握手。SEQ和ACK的含义与之前讲解的内容一致。向主机A传递了两次ACK 5001,也许这会让各位感到困惑。其实，第二次FIN数据包中的ACK 5001知识因为接收ACK消息后未接收数据而重传的。
+
+前面讲解了TCP协议基本内容TCP流控制（Flow Control），希望这有助于大家理解TCP数据传输特性。
