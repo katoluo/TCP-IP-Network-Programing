@@ -12,7 +12,7 @@ TCP中断开连接过程 比建立连接过程更重要，因为连接过程中�
 
 LInux的close函数和Windows的closesocket函数意味着完全断开连接。完全断开不仅指无法传输数据，而且也不能接收数据。因此，在某种情况下，通信一方调用了close或者closesocket函数断开连接就显得不太优雅，如图7-1所示。
 
-![图7-1]()
+![图7-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_07/images/%E5%9B%BE7-1.png)
 
 上图描述的是2态主机正在进行双向通信。主机A发送完最后的数据后，调用close函数断开了连接，之后主机A无法再接收主机B传输的数据。实际上，是完全无法调用与接收数据相关的函数。最终，由主机B传输的、主机A必须接收的数据也销毁了。
 
@@ -24,7 +24,7 @@ LInux的close函数和Windows的closesocket函数意味着完全断开连接。�
 
 此处的流可以比作水流。水朝着一个方向流动，同样，在套接字的流中，数据也只能向一个方向移动。因此，为了进行双向通信，需要如图7-2所示的2个流。
 
-![图7-2]()
+![图7-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_07/images/%E5%9B%BE7-2.png)
 
 一旦两台主机间建立了套接字连接，每个主机就会拥有单独的输入流和输出流。当然，其中一个主机的输入流与另一主机的输出流相连，而输出流则与另一主机的输入流相连。另外，本章讨论的“优雅地断开连接方式”只断开其中1个流，而非同时断开两个流。Linux的close和Windows的closesocket函数将同时断开两个流，因此与“优雅”儿子还有一段距离。
 
@@ -74,14 +74,17 @@ int shutdown(int sock, int howto);
 
 上述文件传输服务器端和客户端的数据流可整理如图7-3,稍后将根据此图编写示例。希望各位通过此例理解传递EOF的必要性和半关闭的重要性。
 
-![图7-3]()
+![图7-3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_07/images/%E5%9B%BE7-3.png)
 
 首先介绍服务器端。该示例与之前示例不同，省略了大量错误处理代码，希望大家注意。这种处理只是为了便于分析代码，实际编写中不应省略。
 
-[file_server.c]()
+[file_server.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_07/file_server.c)
 
-[file_client.c]()
+[file_client.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_07/file_client.c)
 
 下面是上述示例的运行结果。运行后查看客户端的receive.dat文件，可以验证数据正常接收。特别需要注意的是，还可以确认服务器端已正常接收客户端最后传输的消息”Thank you“。
 
-![运行结果2]()
+![运行结果2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_07/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C2.png)
+
+
+
