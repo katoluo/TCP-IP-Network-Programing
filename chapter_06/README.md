@@ -24,7 +24,7 @@
 
 与TCP不同，UDP不会进行流控制。接下来具体讨论UDP的作用，如图6-1所示。
 
-![图6-1]()
+![图6-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_06/images/%E5%9B%BE6-1.png)
 
 从图可以看出，IP的作用就是让离开主机B的UDP数据包准确传递到主机A。但把UDP包最终交给主机A的某一UDP套接字的过程则是由UDP完成的。UDP最重要的作用就是根据端口号将传到主机的数据包交付给最终的UDP套接字。
 
@@ -58,7 +58,7 @@ UDP服务器端/客户端不像TCP那样在连接状态下交换数据，因此�
 
 TCP中，套接字之间应该是一对一的关系。若要向10个客户端提供服务，则除了守门的服务器套接字外，还需要10个服务器端套接字。但在UDP中，不管服务器端还是客户端都只需要1个套接字。之前解释UDP原理时举了信件的例子，收发信件时使用的邮筒可以比喻为UDP套接字。只要附近有1个邮筒，就可以通过它向任意地址寄出信件。同样，只需1个UDP套接字就可以向任意主机传输数据，如图6-2所示。
 
-![图6-2]()
+![图6-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_06/images/%E5%9B%BE6-2.png)
 
 展示了1个UDP套接字与2个不同主机交换数据的过程。也就是说，只需1个UDP套接字就能和多台主机通信。
 
@@ -108,7 +108,7 @@ ssize_t recvfrom(int sock, void *buff, size_t nbytes, int flags,
 
 下面结合之前的内容实现回声服务器。需要注意的是，UDP不同于TCP，不存在请求连接和受理过程，因此在某种意义上无法明确区别服务器端和客户端。知识因其提供服务而称为服务器端，希望各位不要误解。
 
-[uecho_server.c]()
+[uecho_server.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_06/uecho_server.c)
 
 > 第24行：为了创建UDP套接字，向socket函数第二个参数传递SOCK_DGRAM。
 >
@@ -120,7 +120,7 @@ ssize_t recvfrom(int sock, void *buff, size_t nbytes, int flags,
 
 接下来将诶少与上述服务器端协同工作的客户端。这部分代码与TCP客户端不同，不存在connect函数调用。
 
-[uecho_client.c]()
+[uecho_client.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_06/uecho_client.c)
 
 若各位很好地理解了第4章的connect函数，那么读上述代码时应有如下疑问：
 
@@ -150,17 +150,17 @@ UDP程序中，调用sendto函数传输数据前应完成对套接字的地址�
 
 相反，UDP是具有数据边界的协议，传输中调用I/O函数的次数非常重要。因此，输入函数的调用次数应和输出函数的调用次数完全一致，这样才能保证接收全部已发送叔叔。例如，调用3此输出函数发送的数据必须通过调用3此输入函数才能接收完。下面通过简单示例进行验证。
 
-[bound_host1.c]()
+[bound_host1.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_06/bound_host1.c)
 
 上述示例中需要各位特别留意的是for语句。首先调用了sleep函数，使程序停顿时间等于传递来的时间参数。也就是说，for循环中每隔5秒调用一次recvfrom函数。另外还添加了验证函数调用次数的语句。
 
 接下来的示例向之前的bound_host1.c传输数据，该示例共调用sendto函数3此以传输字符串数据。
 
-[bound_host2.c]()
+[bound_host2.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_06/bound_host2.c)
 
 程序3次调用sendto函数以传输数据，bound_host1.c则调用3此recvfrom函数以接收数据。recvfrom函数调用间隔5秒，因此，调用recvfrom函数前已调用了3次sendto函数。也就是说，此时数据已经传输到bound_host1.c。如果是TCP程序，这时只需要调用1次输入函数即可读入数据。UDP则不同，在这种情况下也需要调用3次recvfrom函数。可通过运行结果进行验证。
 
-![运行结果]()
+![运行结果](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_06/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png)
 
 从运行结果，特别是bound_host1.c的运行结果中可以看出，共调用了3此recvfrom函数。这就验证必须在UDP通信过程中使用I/O函数调用次数保持一致。
 
@@ -205,7 +205,7 @@ connect(sock, (struct sockaddr*)&adr, sizeof(adr));
 
 下列示例将之前的uecho_client.c程序改成基于已连接UDP套接字的程序，因此可以结合uecho_server.c程序运行。另外，为方便说明，未直接删除uecho_client.c的I/O函数，而是添加了注释。
 
-[uecho_con_client.c]()
+[uecho_con_client.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_06/uecho_con_client.c)
 
 我认为没有必要给出运行结果和代码说明，故省略。另外需要注意，代码中用write、read函数代替了sendto、recvfrom函数。
 
