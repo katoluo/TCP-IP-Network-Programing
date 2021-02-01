@@ -10,7 +10,7 @@
 
 我们之前写的程序都是创建好套接字后（未经特别操作）直接使用，此时通过默认的套接字特征进行数据通信。之前的示例较为简单，无需特别操作套接字特性，但有时的确需要更改。表9-1列出了一部分套接字可选项。
 
-![表9-1]()
+![表9-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_09/images/%E8%A1%A89-1.png)
 
 从表中可以看出，套接字可选项是分层的。IPPROTO_IP层可选项是IP协议相关事项，IPPROTO_TCP层可选项是TCP协议相关的事项，SOL_SOCKET层套机诶子相关的通用可选项。
 
@@ -52,9 +52,9 @@ int setsockopt(int sock, int level, int optname, const void *optval,
 
 接下来介绍这些函数的调用方法。关于setsockopt函数的调用方法在其他示例中给出，先介绍getsockopt函数的调用方法。下面是列用协议层为SOL_SOCKET、名为SO_TYPE的可选项查看套接字类型（TCP或UDP）。
 
-[sock_type.c]()
+[sock_type.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_09/sock_type.c)
 
-![运行结果]()
+![运行结果](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_09/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png)
 
 上述示例给出了调用getsockopt函数查看套接字信息的方法。另外，用于验证套接字类型的SO_TYPE是典型的只读可选项，这一点可以通过下面这句话解释：
 
@@ -66,15 +66,15 @@ int setsockopt(int sock, int level, int optname, const void *optval,
 
 SO_RCVBUF是输入缓冲大小相关可选项，SO_SNDBUF是输出缓冲大小相关可选项。用这2个可选项既可以读取当前I/O缓冲大小，也可以进行更改。通过下列下列读取创建套接字时默认的I/O缓冲大小。
 
-[get_buf.c]()
+[get_buf.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_09/get_buf.c)
 
-![运行结果2]()
+![运行结果2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_09/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C2.png)
 
 不同系统运行的结果有较大差异。接下来的程序中将更改I/O缓冲大小。
 
-[set_buf.c]()
+[set_buf.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_09/set_buf.c)
 
-![运行结果3]()
+![运行结果3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_09/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C3.png)
 
 输出结果跟我们预想的完全不同，但也算合理。缓冲大小的设置需要谨慎处理，因此不会完全按照我们的要求进行，知识通过调用setsockopt函数向系统传递我们的要求。如果把输出缓冲设置为0并如实反应这种设置，TCP协议将如何进行？如果要实现流控制和错误发生时的重传机制，至少要有一些缓冲空间吧？上述示例虽没有%100按照我们的请求设置缓冲大小，但也大致反映除了通过setsockopt函数设置的缓冲大小。
 
@@ -108,7 +108,7 @@ SO_RCVBUF是输入缓冲大小相关可选项，SO_SNDBUF是输出缓冲大小�
 
 相信各位已对四次握手有了很好的理解，先观擦该过程，如图9-1所示。
 
-![图9-1]()
+![图9-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_09/images/%E5%9B%BE9-1.png)
 
 假设图9-1中主机A是服务器端，因为是主机A向B发送FIN小，故可以想象成服务器端在控制台输入CTRL+C。但问题是，套接字经过四次握手过程后并非立即消除，而是要经过一段时间的Time-wait状态。当然，只有先断开连接的（先发送FIN消息的）主机才经过Time-wait状态。因此，如服务器端先断开连接，则无法立即重新运行。套接字处在Time-wait过程时，相应端口是正在使用的状态。因此，就像之前验证过的，bind函数调用过程中当然会发生错误。
 
@@ -122,7 +122,7 @@ SO_RCVBUF是输入缓冲大小相关可选项，SO_SNDBUF是输出缓冲大小�
 
 Time-wait看似重要，但并不一定讨人喜欢。考虑一下系统发生故障从而紧急停止的情况。这时需要尽快重启服务器端以提供服务，但因处于Time-wait状态而必须等待几分钟。因此，Time-wait并非只有优点，而且有些情况下肯呢个引发更大问题。图9-2演示了四次握手时不得不延长Time-wait过程的情况。
 
-![图9-2]()
+![图9-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_09/images/%E5%9B%BE9-2.png)
 
 如图所示，在主机A的四次握手过程中，如果最后的数据丢失，则主机B会认为主机A未能收到自己发送的FIN消息，因此重传。这时，收到FIN消息的主机A将重启Time-wait计时器。因此，如果网络状况不理想，Time-wait状态将持续。
 
@@ -140,7 +140,7 @@ Time-wait看似重要，但并不一定讨人喜欢。考虑一下系统发生�
 
 为防止因数据包过多而发生网络过载，Nagle算法在1984年诞生了。它应用在TCP层，非常简单。其使用与否会导致如图9-3所示差异。
 
-![图9-3]()
+![图9-3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_09/images/%E5%9B%BE9-3.png)
 
 上图展示了通过Nagle算法发送字符串"Nagle"和未使用Nagle算法的擦汗别。可以得到如下结论：
 
