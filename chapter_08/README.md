@@ -20,7 +20,7 @@ DNS是对IP地址和域进行相互转换的系统，其核心是DNS服务器。
 
 计算机内置的默认DNS服务器并不知道网络上所有域名的IP地址信息。若该DNS服务器无法解析，则会询问其他NDS服务器，并提供给用户，如图8-1所示。
 
-![图8-1]()
+![图8-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_08/images/%E5%9B%BE8-1.png)
 
 上图展示了默认DNS服务器无法解析主机询问的域名IP地址时的应答过程。可以看出，默认DNS服务器收到自己无法解析的请求时，向上级DNS服务器询问。通过这种方式逐级向上传递信息，到达顶级DNS服务器——根DNS服务器时，它知道该向哪个DNS服务器询问。向下级DNS传递解析请求，得到IP地址后原路返回，最后将解析的IP地址传递到发起请求的主机。DNS就是这样层次化管理的一种分布式数据库系统。
 
@@ -91,11 +91,11 @@ struct hostent
 
 调用gethostbyname函数后返回hsotent结构体的变量结构如图8-2所示，该图在实际编程中非常有用，希望大家结合之前的hostent结构体定义加以理解。
 
-![图8-2]()
+![图8-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_08/images/%E5%9B%BE8-2.png)
 
 下列示例主要演示gethostbyname函数的应用，并说明hostent结构体变量的特性。
 
-[gethostbyname.c]()
+[gethostbyname.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_08/gethostbyname.c)
 
 > 第17行：将通过mian函数传递的字符串用作参数调用gethostbyname。
 >
@@ -105,11 +105,11 @@ struct hostent
 >
 > 第26～28行：输出IP地址信息。但多了令人感到困惑的类型转换。关于这一点稍后将给出说明。
 
-![运行结果3]()
+![运行结果3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_08/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C3.png)
 
 我利用Naver网站域名运行了上述示例，大家可以任选一个域名验。现在讨论上述示例的第26～28行。若只看hostent结构体的定义，结构体成员h_addr_list指向字符串指针数组（由多个字符串地址构成的数组）。但字符串指针数组中的元素实际指向的是（实际保存的是）in_addr结构体变量地址值而非字符串，如图8-3所示。
 
-![图8-3]()
+![图8-3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_08/images/%E5%9B%BE8-3.png)
 
 给出了h_addr_list结构体的参照关系。正因如此，示例的第28行需要进行类型转换，并调用inet_ntoa函数。另外，in_addr结构体的声明可以参考第3章。
 
@@ -141,8 +141,11 @@ struct hostent *gethostbyaddr(const void *addr,
 
 如果已经彻底掌握gethostbyname函数，那么上述函数理解起来并不难。下面通过示例演示该函数的使用方法。
 
-[geohostbyaddr.c]() 
+[geohostbyaddr.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_08/gethostbyaddr.c) 
 
 除第21行的gethostbyaddr函数调用过程外，与gethostbyname.c并无却别，因为函数调用的结果是通过hostent结构体变量地址值传递的。
 
-![运行结果4]()
+![运行结果4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_08/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C4.png)
+
+
+
