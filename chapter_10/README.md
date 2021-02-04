@@ -46,7 +46,7 @@
 
 讲解创建进程方法前，先简要说明进程ID。无论进程是如何创建的，所有进程都会从操作系统分配到ID。此ID称为"进程ID"，其值为大于2的整数。1要分配给操作系统启动后的（用于协助操作系统）首个进程，因此用户进程就无法得到ID值1.接下来观擦Linux中正在运行的进程。
 
-![运行结果]()
+![运行结果](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png)
 
 可以看出，通过ps指令可以查看当前运行的所有进程。特别需要注意的是，该命令同时列出了PID（进程ID）。另外，上述示例通过指定a和u参数列出了所有进程详细信息。
 
@@ -68,13 +68,13 @@ fork函数将创建调用的进程副本（概念上略难）。也就是说，�
 
 此处"父进程"（Parent Process）指原进程，即调用fork函数的主体，而"子进程"（Child Process）是通过父进程调用fork函数复制出的进程。接下来讲解调用fork函数后的程序运行流程，如图10-1所示。
 
-![图10-1]()
+![图10-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E5%9B%BE10-1.png)
 
 从图中可以看到，父进程调用fork函数的同时复制出子进程，并分别得到fork函数的返回值。但复制前，父进程将全局变量gval增加到11,将局部变量lval的值增加到25,因此在这种状态下完成进程复制。赋值完成后根据fork函数返回类型区别父子进程。父进程将lval的值加1,但这不会影响子进程的lval值。同样，子进程将gval的值加1也不会影响父进程的gval。因为fork函数调用后分成了完全不同的进程，只是二者共享同一代码而已。接下来给出示例验证之前的内容。
 
-[fork.c]()
+[fork.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/fork.c)
 
-![运行结果2]()
+![运行结果2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C2.png)
 
 从运行结果可以看出，调用fork函数后，父子进程拥有完全独立的内存结构。我认为关于fork函数无需更多示例，希望各位通过该示例充分理解调用fork函数创建进程的方法。
 
@@ -100,9 +100,9 @@ fork函数将创建调用的进程副本（概念上略难）。也就是说，�
 
 如何向父进程传递这些值呢？操作系统不会主动把这些值传递给父进程。只有父进程会主动发起请求（函数调用）时，操作系统才会传递该值。换言之，如果父进程未主动要求获得子进程的结束状态值，操作系统将一直保存，并让子进程长时间处于僵尸进程状态。接下来的示例将创建僵尸进程。
 
-[zombie.c]()
+[zombie.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/zombie.c)
 
-![运行结果3]()
+![运行结果3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C3.png)
 
 > 后台处理（Background Processing）
 >
@@ -140,9 +140,9 @@ if (WIFEXITED(status))	// 是正常终止的嘛？
 
 根据上述内容编写示例，此示例中不会再让子进程编程僵尸进程。
 
-[wait.c]()
+[wait.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/wait.c)
 
-![运行结果4]()
+![运行结果4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C4.png)
 
 系统中并无上述结果中的PID对应的进程，希望各位进行验证。这是因为调用了wait函数，完全销毁了该进程。另外2个子进程终止时返回的3和7传递到了父进程。
 
@@ -165,9 +165,9 @@ pid_t waitpid(pid_t pid, int *statloc, int options);
 
 下面介绍调用上述函数的示例。调用waitpid函数，程序不会阻塞。各位应终点观擦这点。
 
-[waitpid.c]()
+[waitpid.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/waitpid.c)
 
-![运行结果5]()
+![运行结果5](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C5.png)
 
 #### 10.3 信号处理
 
@@ -252,9 +252,9 @@ unsigned int alarm(unsigned int seconds);
 
 接下来给出信号处理相关示例，希望各位通过该示例彻底掌握之前的内容。
 
-[signal.c]()
+[signal.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/signal.c)
 
-![运行结果6]()
+![运行结果6](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C6.png)
 
 上述是没有任何输入时的运行结果。下面在运行过程中输入CTRL+C。可以看到输出"CTRL+C pressed"字符串。有一点必须说明：
 
@@ -297,9 +297,9 @@ struct sigaction
 
 下面给出示例，其中还包括了尚未讲解的使用sigaction函数所需全部内容。
 
-[sigaction.c]()
+[sigaction.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/sigaction.c)
 
-![运行结果7]()
+![运行结果7](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C7.png)
 
 这就是信号处理相关理论，以此为基础讨论消灭僵尸进程的方法。
 
@@ -307,9 +307,9 @@ struct sigaction
 
 我相信各位也可以独立编写消灭僵尸进程的示例。子进程终止时将产生SIGCHLD信号，知道这一点就很容易完成。接下来利用sigaction函数编写示例。
 
-[remove_zombie.c]()
+[remove_zombie.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/remove_zombie.c)
 
-![运行结果8]()
+![运行结果8](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C8.png)
 
 可以看出，子进程并未编程僵尸进程，而是正常终止了。接下来利用进程相关知识编写服务器端。
 
@@ -321,7 +321,7 @@ struct sigaction
 
 之前的回声服务器端每次只能向1个客户端提供服务。因此，我们将扩展回声服务器端，使其可以同时向多个客户端提供服务。图10-2给出了基于多进程的并发回声服务器端的实现模型。
 
-![图10-2]()
+![图10-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E5%9B%BE10-2.png)
 
 从图10-2可以看出，每当有客户端请求服务（连接请求）时，回声服务器端都创建子进程以提供服务。请求服务的客户端若有5个，则将创建5个子进程提供服务。为了完成这些任务，需要经过如下过程，这是与之前的回声服务器端的区别所在。
 
@@ -337,9 +337,9 @@ struct sigaction
 
 虽然我已经给出了所有理论说明，但大家业余还没相处具体的实现方法，这就有必要理解具体代码。下面给出并发回声服务器端的实现大马。当然，程序是基于多进程实现的，可以结合第4章的回声客户端运行。
 
-[echo_mpserv.c]()
+[echo_mpserv.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/echo_mpserv.c)
 
-![运行结果9]()
+![运行结果9](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C9.png)
 
 启动服务器端后，要创建多个客户端并建立连接。可以验证服务器端同时向大多数客户端提供服务，不，一定要验证这一点。
 
@@ -355,11 +355,11 @@ struct sigaction
 
 示例中fork函数调用过程如图10-3所示。调用fork函数后，2个文件描述符指向同一套接字。
 
-![图10-3]()
+![图10-3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E5%9B%BE10-3.png)
 
 如图所示，1个套接字中存在2个文件描述符时，只有2个文件描述符终止（销毁）后，才能销毁套接字。如果维持图中的连接状态，即使子进程销毁了与客户端连接的套接字文件描述符，也无法完全销毁套接字（服务器端套接字同样如此）。因此，调用fork函数后，要将无关的套接字文件描述符关掉，如图10-4所示。
 
-![图10-4]()
+![图10-4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E5%9B%BE10-4.png)
 
 为了将文件描述符整理成图10-4的形式，示例中调用了close函数。
 
@@ -377,13 +377,13 @@ struct sigaction
 
 从图可以看出，客户端的父进程负责接收数据，额外创建的子进程负责发送数据。分割后，不同进程分别负责输入和输出，这样，无论客户端是否从服务器端接收完数据都可以进行传输。
 
-![图10-5]()
+![图10-5](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E5%9B%BE10-5.png)
 
 选择这种实现方式的原因有很多，但最重要的一点是，程序的实现更加简单。也许有人质疑：既然多产生1个进程，怎么能简化程序实现呢？起始，按照这种实现方式，父进程中只需编写接收数据的代码，子进程只需编写发送数据的代码，所以会简化。实际上，在1个进程内同时实现数据收发逻辑需要考虑更多细节。程序越符炸，这种区别越明显，它也是公认的优点。
 
 分隔I/O程序的另一个好处是，可以提高频繁交换数据的程序性能，如图10-6所示。
 
-![图10-6]()
+![图10-6](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E5%9B%BE10-6.png)
 
 上图左侧演示的是之前的回声客户端数据交换方式，右侧演示的是分隔I/O后的客户端数据传输方式。服务器端相同，不同的是客户端区域。分隔I/O后的客户端发送数据时不必考虑接收数据的情况，因此可以连续发送数据，由此提高同一时间内传输的数据量。这种差异在网络较慢时尤为明显。
 
@@ -391,8 +391,8 @@ struct sigaction
 
 我们已经知道I/O程序分割的意义，接下来通过实际代码进行实现，分隔的对象是回声客户端。下列回声客户端可以将诶和之前的回声服务器端echo_mpserv.c运行。
 
-[echo_mpclient.c]()
+[echo_mpclient.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_10/echo_mpclient.c)
 
-![运行结果10]()
+![运行结果10](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_10/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C10.png)
 
 无论是否接收消息，每次通过键盘输入字符串时都会输出上述字符串，可能造成输出混乱。基于多任务的服务器端实现方法讲解到此结束。
