@@ -26,11 +26,11 @@
 
 上述两种说法内容完全一致，知识描述方式有所区别。下面我根据自己的理解进行解释。图12-1中给出的是纸杯电话，相信大家上小学时也做过。
 
-![图12-1]()
+![图12-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-1.png)
 
 图是远距离的3人可以同时通话的3方对话纸杯电话系统。为使3人同时对话，需准备图中所示系统。另外，为了完成3人对话，说话时需要同时对着两个纸杯，接听时也需要耳朵同时对着两个纸杯。此时引入复用奇数会使通话更加方便，如图12-2所示。
 
-![图12-2]()
+![图12-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-2.png)
 
 我们上小学时做过类似系统（把先捆在中间并绷直）。构建这种系统就无需同时使用两个杯子，可以说小学就学过"f复用" 的概念了。接下来讨论复用奇数的优点。
 
@@ -48,11 +48,11 @@
 
 纸杯电话系统引入复用技术后，可以减少纸杯数和连线长度。同样，服务器端引入复用技术可以减少所需进程数。未便于比较，献给出第10章的多进程服务器端模型，如图12-3所示。
 
-![图12-3]()
+![图12-3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-3.png)
 
 上图的模型中引入复用技术，可以减少进程数。重要的是，无论连接多少客户端，提供服务的进程只有1个。
 
-![图12-4]()
+![图12-4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-4.png)
 
 以上就是I/O复用服务器端模型的讲解，下面考虑通过1个进程向多个客户端提供服务的方法。
 
@@ -76,7 +76,7 @@
 
 select函数的使用方法与一般函数区别较大，更准确地说，它很难使用。但为了实现I/O复用服务器端，我们应掌握select函数，并运用到套接字编程中。认为"select函数是I/O复用的全部内容"也并不为过。接下来介绍select函数的调用方法和顺序，如图12-5所示。
 
-![图12-5]()
+![图12-5](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-5.png)
 
 上图给出了从调用select函数到过去结果所经过程。可以看到，调用select函数前需要一些准备工作，调用后还需查看结果。接下来按照上述顺序逐一讲解。
 
@@ -86,7 +86,7 @@ select函数的使用方法与一般函数区别较大，更准确地说，它�
 
 使用fd_set数组变量执行此项操作，如图12-6所示。该数组是存有0和1的位数组。
 
-![图12-6]()
+![图12-6](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-6.png)
 
 上图中最左端的位表示文件描述符0（所在位置）。如果该位置设置为1,则表示该文件描述符是监视对象。那么图中哪些文件描述符是监视对象呢？很明显，是文件描述符1和3。
 
@@ -104,7 +104,7 @@ select函数的使用方法与一般函数区别较大，更准确地说，它�
 
 上述函数中，FD_ISSET用于验证select函数的调用结果。通过图12-7解释这些函数的功能，简洁易懂，无需赘述。
 
-![图12-7]()
+![图12-7](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-7.png)
 
 设置检查（监视）范围及超时
 
@@ -154,7 +154,7 @@ struct timeval
 
 select函数返回正整数时，怎样获知哪些文件描述符发生了方便话？向select函数的第二到第四个参数传递的fd_set变量中将产生如图12-8所示变化，获知过程并不难。
 
-![图12-8]()
+![图12-8](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E5%9B%BE12-8.png)
 
 由上图可知，select函数调用完成后，向其传递的fd_set变量中将发生变化。原来为1的所有位均变为0,但发生变化的文件描述符对应位除外。因此，可以认为值仍为1的位置上的文件描述符发生了变化。
 
@@ -162,9 +162,9 @@ select函数返回正整数时，怎样获知哪些文件描述符发生了方�
 
 下面通过示例把select函数所有知识点进行整合，希望各位通过如下示例完全理解之前的内容。
 
-[select.c]()
+[select.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_12/select.c)
 
-![运行结果1]()
+![运行结果1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C1.png)
 
 运行后若无任何输入，经过5秒将发生超时。若通过键盘输入字符串，则可看到相同字符串输出。
 
@@ -172,8 +172,8 @@ select函数返回正整数时，怎样获知哪些文件描述符发生了方�
 
 下面通过select函数实现I/O复用服务器端。之前已给出关于select函数的所有说明，各位只需通过示例掌握利用select函数实现服务器端的方法。下列示例是基于I/O复用的回声服务器端。
 
-[echo_selectserv.c]()
+[echo_selectserv.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_12/echo_selectserv.c)
 
-![运行结果2]()
+![运行结果2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_12/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C2.png)
 
 为了验证运行结果，使用了第4章介绍的echo_client.c，起始上述回声客户端也可与其他回声客户端配合运行。
