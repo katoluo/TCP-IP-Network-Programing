@@ -40,7 +40,7 @@
 
 每个进程的内存空间都由保存全局变量的"数据区"、向malloc等函数的动态分配提供空间的堆（Heap）、函数运行时使用的栈（Stack）构成。每个进程都拥有这种独立空间，多个进程的内存结构如图18-1所示。
 
-![图18-1]()
+![图18-1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-1.png)
 
 但如果以获得多个代码执行流为主要目的，则不应该像图18-1那样完全分离内存结构，而只需分离栈区域。通过这种方式可以获得如下优势。
 
@@ -50,7 +50,7 @@
 
 实际上这就是线程。线程为了保持多条代码执行流而隔开了栈区域，因此具有如图18-2所示的内存结构。
 
-![图18-2]()
+![图18-2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-2.png)
 
 如图18-2所示，多个线程将共享数据区和堆。为了保持这种结构，线程将在进程内创建并运行。也就是说，进程和线程可以定义为如下形式。
 
@@ -60,7 +60,7 @@
 
 如果说进程在操作系统内部生成多个执行流，那么线程就在同一进程内部创建多条执行流。因此，操作系统、进程、线程之间的关系可以通过图18-3表示。
 
-![图18-3]()
+![图18-3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-3.png)
 
 以上就是线程的理论说明。没有实际编程就很难理解好线程，希望各位通过学习线程相关代码理解全部内容。
 
@@ -89,13 +89,13 @@ int pthread_create(
 
 要想理解好上述函数的参数，需要熟练掌握restrict关键字和函数指针相关语法。但如果只关注使用方法（当然以后要掌握restrict和函数指针），那么该函数的使用比想象中要简单。下面通过简单示例了解该函数的功能。
 
-[thread1.c]()
+[thread1.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/thread1.c)
 
-![运行结果1]()
+![运行结果1](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C1.png)
 
 从上述运行结果中可以看到，线程相关代码在编译时需要添加-pthread选项声明需要连接线程库，只有这样才能调用头文件pthread.h中声明的函数。上述程序的执行流程如图18-4所示。
 
-![图18-4]()
+![图18-4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-4.png)
 
 图18-4中虚线代表执行流称，向下的箭头指的是执行流，横向箭头是函数调用。这些都是简单的符号，可以结合示例理解。接下来将上述示例的第15行sleep函数的调用语句改成如下形式：
 
@@ -103,7 +103,7 @@ int pthread_create(
 
 各位运行后可以看到，此时不会像代码中写的那样输出5次"running thread"字符串。因为main函数返回后整个进程被销毁，如图18-5所示。
 
-![图18-5]()
+![图18-5](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-5.png)
 
 正因如此，我们在之前的示例中通过调用sleep函数向线程提供了充足的执行时间。
 
@@ -123,13 +123,13 @@ int pthread_join(pthread_t thread, void **status);
 
 简言之，调用该函数的进程（或线程）将进入等待状态，直到第一个参数为ID的线程终止位置。而且可以得到线程的main函数返回值，所以该函数比较有用。下面通过示例了解该函数的功能。
 
-[thread2.c]()
+[thread2.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/thread2.c)
 
-![运行结果2]()
+![运行结果2](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C2.png)
 
 最后，为了让大家更好的理解该示例，给出其执行流程图，如图18-6所示。请注意观擦程序暂停后从线程终止时（线程main函数返回时）重新执行的部分。
 
-![图18-6]()
+![图18-6](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-6.png)
 
 **可在临界区内调用的函数**
 
@@ -180,11 +180,11 @@ $ gcc -D_TEENTRANT mythread.c -o mthread -lpthread
 
 将要介绍的示例将计算1到10的和，但并不是在main函数中进行累加运算，而是创建2个线程，其中一个线程计算1到5的和，另一个线程计算6到10的和，main函数只负责输出运算结果。这种方式的编程模型称为"工作线程（Worker thread）模型"。计算1到5之和的线程与计算6到10之和的线程将称为main线程管理的工作（Worker）。最后，给出示例代码前先给出程序执行流程图，如图18-7所示。
 
-![图18-7]()
+![图18-7](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-7.png)
 
 之前也介绍过类似的图，相信各位很容易看懂图18-7描述的内容（知识单纯说明图，并未使用特殊的表示方法）。另外，线程相关代码的执行流程理解起来相对复杂一些，有必要习惯于这类流程图。
 
-[thread3.c]()
+[thread3.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/thread3.c)
 
 之前讲过线程调用函数的参数和返回值类型，因此不难理解上述示例中创建线程并执行的部分。但需要注意：
 
@@ -192,15 +192,15 @@ $ gcc -D_TEENTRANT mythread.c -o mthread -lpthread
 
 通过上述示例的第28行可以得出这种结论。从代码的角度看似乎理所应当，但之所以可行完全因为2个线程共享保存全局变量的数据区。
 
-![运行结果3]()
+![运行结果3](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C3.png)
 
 运行结果是55,虽然正确，但示例本省存在问题。此处存在临界区相关问题，因此再介绍另一示例。该示例与上述示例相似，只是增加了发生临界区相关错误的可能性，即使在高配置系统环境下也容易验证产生的错误。
 
-[thread4.c]()
+[thread4.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/thread4.c)
 
 上述示例中共创建了100个线程，其中一半执行thread_inc函数中的代码，另一半则执行thread_des函数中的代码。全局变量num经过增减过程后应存有0,通过运行结果观擦是否真能得到。
 
-![运行结果4]()
+![运行结果4](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C4.png)
 
 运行结果并不是0！而且每次运行的记过均不同。虽然其原因尚不得而知，但可以肯定的是，这对于线程的应用是个大问题。
 
@@ -220,27 +220,27 @@ $ gcc -D_TEENTRANT mythread.c -o mthread -lpthread
 
 当然，此处的"同时访问"与各位所想的有一定区别。下面通过示例解释"同时访问"的含义，并说明为何会引起问题。假设2个线程要执行将变量值逐次加1的工作，如图18-8所示。
 
-![图18-8]()
+![图18-8](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-8.png)
 
 上图中描述的是2个线程准备将变量num的值加1的情况。在此状态下，线程1将num的值增加到100后，线程2在访问num时，变量num中将按照我们的预想保存101.图18-9是线程1将变量num完全增加后的情形。
 
-![图18-9]()
+![图18-9](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-9.png)
 
 上图中需要注意值的增加方式，值的增加需要CPU运算完成，变量num中的值不会自动增加。线程1首先读该变量的值并将其传递到CPU，获取加1之后的结果，最后再把结构写回变量num，这样num中就保存100.接下来给出线程2的执行过程，如图18-10所示。
 
-![图18-10]()
+![图18-10](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-10.png)
 
 变量num中将保存101,但这是最理想的情况。线程1完全增加num值之前，线程2完全有可能通过切换得到CPU资源。下面从头再来。图18-11描绘的是线程1读取变量num的值并完成加1运算时的情况，知识加1后的结果尚未写入变量num。
 
-![图18-11]()
+![图18-11](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-11.png)
 
 接下来就要将100保存到变量num中，但执行该操作前，执行流程跳转到了线程2.幸运的是（是否真正幸运稍后再论），线程2完成了加1运算，并将加1之后的记过写入变量num，如图18-12所示。
 
-![图18-12]()
+![图18-12](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-12.png)
 
 从上图中可以看到，变量num的值尚未被线程1加到100,因此线程2读到的变量num的值为99,结果是线程2将num值改成100.还剩下线程1将运算后的值写入变量num的操作。接下来给出该过程，如图18-13所示。
 
-![图18-13]()
+![图18-13](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E5%9B%BE18-13.png)
 
 很可惜，此时线程1将自己的运算结果100在此写入变量num，结果变量num编程100.虽然线程1和线程2各做了1次加1运算，却得到了意想不到的结果。因此，线程访问变量num时应该阻止其他线程更访问，知道线程1完成运算。这就是同步（Synchronization）。相信各位也意识到了多线程编程中"同步" 的必要性，且能够理解thread4.c的运行结果。
 
@@ -366,9 +366,9 @@ pthread_mutex_unlock(&mutex);
 
 简言之，就是利用lock和unlock函数围住临界区的两端。此时互斥量相当于一把锁，阻止多个线程同时访问。还有一点需要注意，线程退出临界区时，如果忘了调用pthread_mutex_unlock函数，那么其他为了进入临界区而调用pthread_mutex_lock函数的线程就无法摆脱阻塞状态。这种情况称为"死锁"（Dead-lock），需要格外注意。接下来利用互斥量解决示例thread4.c中遇到的问题。
 
-[mutex.c]()
+[mutex.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/mutex.c)
 
-![运行结果5]()
+![运行结果5](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C5.png)
 
 从运行结果可以看出，以解决了示例thread4.c中的问题。但确认运行结果需要等待较长时间。因为互斥量lock、unlock函数的调用过程要比想象中话费更长时间。首先分析一下thread_inc函数的同步过程。
 
@@ -434,9 +434,9 @@ sem_post(&sem); // 信号值变为1
 
 为了按照上述要求构建程序，应按照线程A、线程B的顺序访问变量num，且需要线程同步。接下来给出示例，分析该示例可能需要花费一定时间。
 
-[semaphore.c]()
+[semaphore.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/semaphore.c)
 
-![运行结果6]()
+![运行结果6](https://github.com/katoluo/TCP-IP-Network-Programing/raw/master/chapter_18/images/%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C6.png)
 
 #### 线程的销毁和多线程并发服务器端的实现
 
@@ -469,7 +469,7 @@ int pthread_detach(pthread_t thread);
 
 无论服务器端还是客户端，代码量都不少，故省略可以从其他示例中得到或从源代码中下载头文件声明。同时最大程度地减少异常处理的代码。
 
-[chat_server.c]()
+[chat_server.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/chat_server.c)
 
 上述示例中，各位必须掌握的并不是聊天服务器端的实现方式，而是临界区的构成形式。上述示例中的临界区具有如下特点：
 
@@ -487,7 +487,7 @@ int pthread_detach(pthread_t thread);
 
 接下来介绍聊天客户端，客户端示例为了分离输入和输出过程而创建了线程。代码分析并不难，故省略源代码相关说明。
 
-[chat_client.c]()
+[chat_client.c](https://github.com/katoluo/TCP-IP-Network-Programing/blob/master/chapter_18/chat_client.c)
 
 
 
